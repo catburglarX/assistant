@@ -1,0 +1,49 @@
+[
+  {
+    "id": "coco-assistant",
+    "base_model_id": "__OPENROUTER_MODEL__",
+    "name": "__ASSISTANT_NAME__",
+    "params": {
+      "system": "__SYSTEM_PROMPT__"
+    },
+    "meta": {
+      "description": "A warm, practical personal AI assistant powered through OpenRouter.",
+      "tags": [
+        {
+          "name": "personal assistant"
+        }
+      ],
+      "capabilities": {
+        "vision": false,
+        "file_upload": false,
+        "file_context": false,
+        "web_search": false,
+        "image_generation": false,
+        "code_interpreter": false,
+        "terminal": false,
+        "citations": false,
+        "memory": true,
+        "builtin_tools": false
+      },
+      "builtinTools": {
+        "automations": false,
+        "calendar": false,
+        "channels": false,
+        "chats": false,
+        "code_interpreter": false,
+        "files": false,
+        "image_generation": false,
+        "knowledge": false,
+        "memory": false,
+        "notes": false,
+        "notifications": false,
+        "subagents": false,
+        "tasks": false,
+        "time": false,
+        "web_search": false
+      }
+    },
+    "access_grants": [],
+    "is_active": true
+  }
+]

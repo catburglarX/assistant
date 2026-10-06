@@ -30,5 +30,5 @@ until curl --fail --silent "${app_url}/health" >/dev/null 2>&1; do
   fi
   sleep 2
 done
-echo "Mira's Open WebUI is reachable at ${app_url}"
-echo "After creating the first admin account, import config/mira-model.json in Workspace > Models."
+echo "Coco's Open WebUI is reachable at ${app_url}"
+echo "After creating the first admin account, import config/coco-model.json in Workspace > Models."

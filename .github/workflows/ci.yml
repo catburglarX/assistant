@@ -21,8 +21,8 @@ jobs:
           cp .env.example .env.ci
           sed -i 's/^OPENROUTER_API_KEY=.*/OPENROUTER_API_KEY=test-only-not-a-real-key/' .env.ci
           chmod 600 .env.ci
-      - name: Render Mira preset
-        run: python3 scripts/render_config.py --env .env.ci --output /tmp/mira-model.json
+      - name: Render Coco preset
+        run: python3 scripts/render_config.py --env .env.ci --output /tmp/coco-model.json
       - name: Run unit and security tests
         run: python3 -m unittest discover -s tests -v
       - name: Validate Compose

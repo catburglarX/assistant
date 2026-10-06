@@ -30,7 +30,7 @@ class ProjectTests(unittest.TestCase):
         values = {
             "OPENROUTER_API_KEY": "test-only-not-a-real-key",
             "OPENROUTER_MODEL": "nvidia/nemotron-3-ultra-550b-a55b",
-            "ASSISTANT_NAME": "Mira",
+            "ASSISTANT_NAME": "Coco",
             "APP_HOST": "127.0.0.1",
             "APP_PORT": "3000",
         }
@@ -52,13 +52,13 @@ class ProjectTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             env = Path(directory) / ".env"
             env.write_text(
-                "ASSISTANT_NAME=Mira\nOPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b\n",
+                "ASSISTANT_NAME=Coco\nOPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b\n",
                 encoding="utf-8",
             )
             output = Path(directory) / "model.json"
             render_module.render(env, output)
             model = json.loads(output.read_text(encoding="utf-8"))[0]
-            self.assertEqual(model["name"], "Mira")
+            self.assertEqual(model["name"], "Coco")
             self.assertEqual(model["base_model_id"], "nvidia/nemotron-3-ultra-550b-a55b")
             self.assertTrue(model["meta"]["capabilities"]["memory"])
             self.assertFalse(model["meta"]["builtinTools"]["memory"])
@@ -69,7 +69,7 @@ class ProjectTests(unittest.TestCase):
         compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
         self.assertIn("${APP_HOST:-127.0.0.1}:${APP_PORT:-3000}:8080", compose)
         self.assertIn('WEBUI_AUTH: "true"', compose)
-        self.assertIn("mira-data:/app/backend/data", compose)
+        self.assertIn("coco-data:/app/backend/data", compose)
         self.assertIn('ENABLE_OLLAMA_API: "false"', compose)
         self.assertIn('ENABLE_WEB_SEARCH: "false"', compose)
         self.assertIn('ENABLE_CODE_INTERPRETER: "false"', compose)

@@ -1,6 +1,8 @@
-# Mira on Open WebUI
+# Coco on Open WebUI
 
 A small, configuration-first personal assistant deployment based on the official Open WebUI image. This project is an independent deployment configuration, **not an official Open WebUI release**.
+
+Coco supports normal conversation, practical help, beginner-friendly coding explanations, and progressively hinted practice problems. Open WebUI supplies streaming, clearly separated messages, new chats, a persistent chat list, rename/delete controls, stop generation, response copying, responsive layouts, settings, and memory management.
 
 ## What is pinned
 
@@ -51,14 +53,14 @@ Open [http://localhost:3000](http://localhost:3000), create the first admin acco
 
 In your OpenRouter account, review provider routing and data/privacy controls before chatting. Provider availability and retention can change independently of this project; do not assume zero retention.
 
-### Import and select Mira
+### Import and select Coco
 
-`start.sh` renders `config/mira-model.json` from `.env` and `config/mira-system-prompt.md`.
+`start.sh` renders `config/coco-model.json` from `.env` and `config/coco-system-prompt.md`.
 
 1. Go to **Workspace → Models**.
-2. Use **Import** and choose `config/mira-model.json`.
-3. Start a new chat and select **Mira**.
-4. Send: `Hi Mira. Briefly introduce yourself.`
+2. Use **Import** and choose `config/coco-model.json`.
+3. Start a new chat and select **Coco**.
+4. Send: `Hi Coco. Briefly introduce yourself.`
 
 If you change `ASSISTANT_NAME`, `OPENROUTER_MODEL`, or the prompt, run:
 
@@ -79,7 +81,9 @@ This deployment deliberately uses manual, user-controlled memory:
 - Disable the personal Memory toggle when you do not want memories used in a chat.
 - An administrator can globally disable memory at **Admin settings → General → Features → Memories**.
 
-Background extraction is off, and Mira's model preset explicitly withholds native memory tools. This prevents an unsolicited model tool call from writing memory. Approved memories remain available in fresh chats through Open WebUI's server-side memory context. If memory is disabled globally, v0.11.4 blocks its APIs, tools, and context injection.
+Background extraction is off, and Coco's model preset explicitly withholds native memory tools. This prevents an unsolicited model tool call from writing memory. Approved memories remain available in fresh chats through Open WebUI's server-side memory context. If memory is disabled globally, v0.11.4 blocks its APIs, tools, and context injection.
+
+For example, you can manually save “I prefer explanations before code,” “Keep replies short,” “I’m learning Python,” or a registration number you explicitly want remembered. A registration number is a personal identifier: store it only if needed, and remember that enabled memories can be sent to OpenRouter and the routed provider when relevant.
 
 Do not save passwords, API keys, inferred sensitive traits, temporary moods, or unconfirmed assumptions as memories.
 
@@ -102,7 +106,7 @@ Do not save passwords, API keys, inferred sensitive traits, temporary moods, or 
 ./scripts/backup.sh
 ```
 
-The application data lives in the named volume `mira-assistant_mira-data`, so chats and memories survive restarts and container recreation.
+The application data lives in the named volume `coco-assistant_coco-data`, so chats and memories survive restarts and container recreation.
 
 ### Stop vs remove vs erase
 
@@ -115,7 +119,7 @@ docker compose down
 
 # DANGER: permanently delete persistent local application data.
 # This is intentionally never run by a script.
-docker volume rm mira-assistant_mira-data
+docker volume rm coco-assistant_coco-data
 ```
 
 Backups under `backups/` are separate files and must be deleted separately.
@@ -126,7 +130,7 @@ Backups under `backups/` are separate files and must be deleted separately.
 python3 scripts/validate.py
 ./scripts/logs.sh 300
 docker compose ps
-docker stats --no-stream mira-open-webui
+docker stats --no-stream coco-open-webui
 ```
 
 Open WebUI surfaces provider failures rather than converting them into assistant messages. Common causes:
@@ -160,7 +164,7 @@ Manual behavior checks:
 
 1. Casual greeting.
 2. Beginner coding question.
-3. Correct Mira and verify it accepts the correction.
+3. Correct Coco and verify it accepts the correction.
 4. Add a preference manually; open a fresh chat and verify it is used.
 5. Emotional but non-crisis message.
 6. Ask “Are you human?” and “Do you have feelings?”
@@ -204,7 +208,7 @@ Voice is intentionally disabled in this core release. The slim image contains no
 
 ## Known limitations
 
-- The Mira preset import is one manual post-signup step.
+- The Coco preset import is one manual post-signup step.
 - This configuration has no custom approval UI for conversational “remember this”; use the native memory editor.
 - Provider-side retention and routing are controlled outside this repository.
 - Resource usage depends on your OS, Docker, browser, and Open WebUI release. Measure it locally with `docker stats`; this repository does not invent a benchmark or impose an unmeasured memory cap.

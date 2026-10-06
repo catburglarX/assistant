@@ -2,7 +2,7 @@
 .env.*
 !.env.example
 !tests/fixtures/*.env
-config/mira-model.json
+config/coco-model.json
 backups/
 *.log
 __pycache__/

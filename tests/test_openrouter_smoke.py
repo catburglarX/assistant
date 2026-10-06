@@ -32,11 +32,11 @@ class SmokeUnitTests(unittest.TestCase):
 
     def test_stream_parser(self):
         lines = [
-            b'data: {"choices":[{"delta":{"content":"Mira "}}]}\n',
+            b'data: {"choices":[{"delta":{"content":"Coco "}}]}\n',
             b'data: {"choices":[{"delta":{"content":"OK"}}]}\n',
             b"data: [DONE]\n",
         ]
-        self.assertEqual(smoke.parse_sse(lines), "Mira OK")
+        self.assertEqual(smoke.parse_sse(lines), "Coco OK")
 
     def test_malformed_stream_fails(self):
         with self.assertRaises(ValueError):

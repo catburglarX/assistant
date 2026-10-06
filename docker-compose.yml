@@ -1,14 +1,14 @@
-name: mira-assistant
+name: coco-assistant
 
 services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:v0.11.4-slim
-    container_name: mira-open-webui
+    container_name: coco-open-webui
     restart: unless-stopped
     ports:
       - "${APP_HOST:-127.0.0.1}:${APP_PORT:-3000}:8080"
     volumes:
-      - mira-data:/app/backend/data
+      - coco-data:/app/backend/data
     environment:
       # Deployment inputs mapped to Open WebUI v0.11.4 settings.
       OPENAI_API_BASE_URL: "https://openrouter.ai/api/v1"
@@ -16,7 +16,7 @@ services:
       ENABLE_OPENAI_API: "true"
       ENABLE_OLLAMA_API: "false"
       DEFAULT_MODELS: "${OPENROUTER_MODEL:-nvidia/nemotron-3-ultra-550b-a55b}"
-      WEBUI_NAME: "${ASSISTANT_NAME:-Mira} — Open WebUI"
+      WEBUI_NAME: "${ASSISTANT_NAME:-Coco} — Open WebUI"
       WEBUI_URL: "http://${APP_HOST:-127.0.0.1}:${APP_PORT:-3000}"
 
       # Authentication stays on. v0.11.4 allows the first admin signup and
@@ -28,7 +28,7 @@ services:
       ENABLE_ADMIN_CHAT_ACCESS: "false"
 
       # User-controlled memory: manual editor + bounded prompt injection.
-      # Model-side writes are separately disabled in config/mira-model.json.
+      # Model-side writes are separately disabled in config/coco-model.json.
       ENABLE_MEMORIES: "true"
       ENABLE_MEMORY_SYSTEM_CONTEXT: "true"
       ENABLE_MEMORY_BACKGROUND_REVIEW: "false"
@@ -83,4 +83,4 @@ services:
       - no-new-privileges:true
 
 volumes:
-  mira-data:
+  coco-data:

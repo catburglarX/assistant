@@ -19,7 +19,7 @@ def payload(model: str, stream: bool) -> dict:
     # only basic chat and streaming with a small response budget.
     return {
         "model": model,
-        "messages": [{"role": "user", "content": "Reply with exactly: Mira smoke test OK"}],
+        "messages": [{"role": "user", "content": "Reply with exactly: Coco smoke test OK"}],
         "max_tokens": 32,
         "stream": stream,
     }

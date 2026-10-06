@@ -30,7 +30,7 @@ def validate(values: dict[str, str], require_key: bool = True) -> list[str]:
             raise ValueError
     except ValueError:
         errors.append("APP_PORT must be an integer from 1 to 65535.")
-    if not setting(values, "ASSISTANT_NAME", "Mira"):
+    if not setting(values, "ASSISTANT_NAME", "Coco"):
         errors.append("ASSISTANT_NAME cannot be empty.")
     return errors
 
