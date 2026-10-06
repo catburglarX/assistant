@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+!tests/fixtures/*.env
+config/mira-model.json
+backups/
+*.log
+__pycache__/
+.pytest_cache/
+.DS_Store

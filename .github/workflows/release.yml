@@ -1,0 +1,38 @@
+name: CD - release bundle
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate release inputs
+        run: |
+          cp .env.example .env.ci
+          sed -i 's/^OPENROUTER_API_KEY=.*/OPENROUTER_API_KEY=test-only-not-a-real-key/' .env.ci
+          chmod 600 .env.ci
+          python3 -m unittest discover -s tests -v
+          docker compose --env-file .env.ci config --quiet
+      - name: Build beginner-safe bundle
+        run: |
+          python3 scripts/render_config.py --env .env.example
+          tar --exclude='.git' --exclude='.env.ci' --exclude='backups' \
+            -czf /tmp/mira-open-webui-${GITHUB_REF_NAME}.tar.gz .
+          mv /tmp/mira-open-webui-${GITHUB_REF_NAME}.tar.gz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mira-open-webui-${{ github.ref_name }}
+          path: mira-open-webui-${{ github.ref_name }}.tar.gz
+          if-no-files-found: error

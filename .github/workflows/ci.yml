@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prepare non-secret CI configuration
+        run: |
+          cp .env.example .env.ci
+          sed -i 's/^OPENROUTER_API_KEY=.*/OPENROUTER_API_KEY=test-only-not-a-real-key/' .env.ci
+          chmod 600 .env.ci
+      - name: Render Mira preset
+        run: python3 scripts/render_config.py --env .env.ci --output /tmp/mira-model.json
+      - name: Run unit and security tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate Compose
+        run: docker compose --env-file .env.ci config --quiet
+      - name: Verify loopback-only published port
+        run: |
+          docker compose --env-file .env.ci config |
+            grep -q 'host_ip: 127.0.0.1'
+      - name: Ensure no live key was added
+        run: |
+          if grep -RIE 'sk-or-v1-[A-Za-z0-9_-]{16,}' --exclude-dir=.git .; then
+            echo "Possible OpenRouter secret found"
+            exit 1
+          fi

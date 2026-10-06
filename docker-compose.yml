@@ -1,0 +1,86 @@
+name: mira-assistant
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.11.4-slim
+    container_name: mira-open-webui
+    restart: unless-stopped
+    ports:
+      - "${APP_HOST:-127.0.0.1}:${APP_PORT:-3000}:8080"
+    volumes:
+      - mira-data:/app/backend/data
+    environment:
+      # Deployment inputs mapped to Open WebUI v0.11.4 settings.
+      OPENAI_API_BASE_URL: "https://openrouter.ai/api/v1"
+      OPENAI_API_KEY: "${OPENROUTER_API_KEY:?Set OPENROUTER_API_KEY in .env}"
+      ENABLE_OPENAI_API: "true"
+      ENABLE_OLLAMA_API: "false"
+      DEFAULT_MODELS: "${OPENROUTER_MODEL:-nvidia/nemotron-3-ultra-550b-a55b}"
+      WEBUI_NAME: "${ASSISTANT_NAME:-Mira} — Open WebUI"
+      WEBUI_URL: "http://${APP_HOST:-127.0.0.1}:${APP_PORT:-3000}"
+
+      # Authentication stays on. v0.11.4 allows the first admin signup and
+      # persists ui.enable_signup=false immediately after that account exists.
+      WEBUI_AUTH: "true"
+      ENABLE_SIGNUP: "true"
+      ENABLE_LOGIN_FORM: "true"
+      ENABLE_PERSISTENT_CONFIG: "true"
+      ENABLE_ADMIN_CHAT_ACCESS: "false"
+
+      # User-controlled memory: manual editor + bounded prompt injection.
+      # Model-side writes are separately disabled in config/mira-model.json.
+      ENABLE_MEMORIES: "true"
+      ENABLE_MEMORY_SYSTEM_CONTEXT: "true"
+      ENABLE_MEMORY_BACKGROUND_REVIEW: "false"
+      MEMORIES_USER_CHAR_LIMIT: "2000"
+      MEMORIES_CONTEXT_CHAR_LIMIT: "2000"
+      USER_PERMISSIONS_FEATURES_MEMORIES: "true"
+
+      # Reduce attack surface and background/resource use.
+      ENABLE_WEB_SEARCH: "false"
+      USER_PERMISSIONS_FEATURES_WEB_SEARCH: "false"
+      ENABLE_CODE_INTERPRETER: "false"
+      USER_PERMISSIONS_FEATURES_CODE_INTERPRETER: "false"
+      ENABLE_PLUGINS: "false"
+      ENABLE_DIRECT_INTEGRATIONS: "false"
+      USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS: "false"
+      ENABLE_CHANNELS: "false"
+      USER_PERMISSIONS_FEATURES_CHANNELS: "false"
+      ENABLE_CALENDAR: "false"
+      USER_PERMISSIONS_FEATURES_CALENDAR: "false"
+      ENABLE_AUTOMATIONS: "false"
+      USER_PERMISSIONS_FEATURES_AUTOMATIONS: "false"
+      ENABLE_NOTES: "false"
+      USER_PERMISSIONS_FEATURES_NOTES: "false"
+      USER_PERMISSIONS_FEATURES_IMAGE_GENERATION: "false"
+      USER_PERMISSIONS_FEATURES_API_KEYS: "false"
+      USER_PERMISSIONS_FEATURES_USER_WEBHOOKS: "false"
+      ENABLE_USER_WEBHOOKS: "false"
+      USER_PERMISSIONS_CHAT_WEB_UPLOAD: "false"
+      USER_PERMISSIONS_CHAT_FILE_UPLOAD: "false"
+      USER_PERMISSIONS_CHAT_SHARE: "false"
+      USER_PERMISSIONS_CHAT_ALLOW_PUBLIC_SHARING: "false"
+      USER_PERMISSIONS_CHAT_ALLOW_OPEN_SHARING: "false"
+      ENABLE_COMMUNITY_SHARING: "false"
+      USER_PERMISSIONS_CHAT_STT: "false"
+      USER_PERMISSIONS_CHAT_TTS: "false"
+      USER_PERMISSIONS_CHAT_CALL: "false"
+
+      # Keep local-model assets from being downloaded. Hosted chat still works.
+      HF_HUB_OFFLINE: "1"
+      SCARF_NO_ANALYTICS: "true"
+      DO_NOT_TRACK: "true"
+      ANONYMIZED_TELEMETRY: "false"
+      GLOBAL_LOG_LEVEL: "INFO"
+      AUDIT_LOG_LEVEL: "NONE"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  mira-data:
