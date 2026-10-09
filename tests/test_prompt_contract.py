@@ -35,6 +35,14 @@ class PromptContractTests(unittest.TestCase):
         ):
             self.assertIn(fragment, self.prompt)
 
+    def test_emotional_acknowledgment_stays_grounded(self):
+        for fragment in (
+            "When acknowledging emotions, stay close to the user's actual details.",
+            "Don't embellish with imagined rejection, exclusion, or other people's behavior.",
+            "If a possibility matters, ask about it instead of describing it as something that happened.",
+        ):
+            self.assertIn(fragment, self.prompt)
+
     def test_manual_memory_is_not_authorized_by_prompt(self):
         self.assertIn("You cannot write memories yourself.", self.prompt)
         self.assertIn("Confirm a save, edit, or deletion only after an actual successful operation.", self.prompt)
