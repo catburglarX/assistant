@@ -4,7 +4,8 @@
     "base_model_id": "__OPENROUTER_MODEL__",
     "name": "__ASSISTANT_NAME__",
     "params": {
-      "system": "__SYSTEM_PROMPT__"
+      "system": "__SYSTEM_PROMPT__",
+      "max_tokens": 1024
     },
     "meta": {
       "description": "A warm, practical personal AI assistant powered through OpenRouter.",
